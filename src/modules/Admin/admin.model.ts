@@ -87,6 +87,7 @@ const adminSchema = new Schema<TAdmin>(
     email: {
       type: String,
       required: [true, 'Email is required'],
+      trim: true,
       // unique: true,
     },
     contactNo: { type: String, required: [true, 'Contact number is required'] },
