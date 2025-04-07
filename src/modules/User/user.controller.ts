@@ -3,8 +3,12 @@ import sendResponse from '../../utils/sendResponse';
 import { status } from 'http-status';
 import { UserServices } from './user.service';
 const createAdmin = catchAsync(async (req, res) => {
-  const {password, admin : adminData } = req.body
-  const result =  await UserServices.createAdminIntoDB(password,adminData)
+  const { password, admin: adminData } = req.body;
+  const result = await UserServices.createAdminIntoDB(
+    req.file,
+    password,
+    adminData,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,

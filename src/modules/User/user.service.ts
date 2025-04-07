@@ -6,8 +6,13 @@ import AppError from '../../errors/AppError';
 import status from 'http-status';
 import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createAdminIntoDB = async (password: string, payload: TAdmin) => {
+const createAdminIntoDB = async (
+  file: any,
+  password: string,
+  payload: TAdmin,
+) => {
   const userData: Partial<TUser> = {};
 
   //   set password
@@ -16,12 +21,22 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   //   set role email
   userData.role = 'admin';
   userData.email = payload.email;
-  userData.id = 'admin123';
 
   //   session start
   const session = await mongoose.startSession();
   try {
     session.startTransaction(); // session
+
+    userData.id = 'admin123';
+
+    if (file) {
+      const imageName = `${payload?.name?.firstName}`;
+      const path = file.path;
+
+      // sent image to cloudinary
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      payload.profileImage = secure_url as string;
+    }
 
     // create a user
     const newUser = await UserModel.create([userData], { session }); // array
@@ -40,7 +55,7 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
 
     await session.commitTransaction(); // commit
     await session.endSession(); // end
-    return newUser;
+    return newAdmin;
   } catch (err: any) {
     await session.abortTransaction(); // abort
     await session.endSession(); // end
