@@ -1,8 +1,12 @@
+import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { AdminSearchableFields } from './admin.constant';
 import { TAdmin } from './admin.interface';
 import { Admin } from './admin.model';
+import AppError from '../../errors/AppError';
+import status from 'http-status';
+import { UserModel } from '../User/user.model';
 
 const getAllAdminFromDB = async (query: Record<string, unknown>) => {
   const adminQuery = new QueryBuilder(Admin.find(), query)
@@ -63,8 +67,53 @@ const updateAdminIntoDB = async (
 
   return result;
 };
+
+const deleteAdminIntoDB = async (id: string) => {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const deletedAdmin = await Admin.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: true,
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+
+    if (!deletedAdmin) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to deleted Admin Data');
+    }
+
+    // get user _id from deleted admin
+    const userId = deletedAdmin?.user;
+
+    const deletedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { isDeleted: true },
+      { new: true, session },
+    );
+
+    if (!deletedUser) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to deleted User Data');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(status.FORBIDDEN, err);
+  }
+};
+
 export const AdminServices = {
   getAllAdminFromDB,
   getSingleAdminFromDB,
   updateAdminIntoDB,
+  deleteAdminIntoDB,
 };
