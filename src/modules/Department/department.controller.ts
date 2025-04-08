@@ -19,7 +19,7 @@ const getAllDepartment = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Department is retrieved successfully',
+    message: 'Department are retrieved successfully',
     data: result,
   });
 });
@@ -30,17 +30,18 @@ const getSingleDepartment = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: '',
+    message: 'Department is retrieved successfully',
     data: result,
   });
 });
 const updateDepartment = catchAsync(async (req, res) => {
-  const result = await DepartmentServices.updateDepartment();
+  const { id } = req.params;
+  const result = await DepartmentServices.updateDepartment(id, req.body);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: '',
+    message: 'Department is updated successfully',
     data: result,
   });
 });

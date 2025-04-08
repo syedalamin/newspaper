@@ -15,6 +15,6 @@ router.get('/', DepartmentControllers.getAllDepartment);
 
 router.get('/:id', DepartmentControllers.getSingleDepartment);
 
-router.patch('/id', DepartmentControllers.updateDepartment);
+router.patch('/:id', DepartmentControllers.updateDepartment);
 
 export const DepartmentRoutes = router;
