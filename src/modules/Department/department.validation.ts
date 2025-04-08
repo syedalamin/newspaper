@@ -10,7 +10,7 @@ const createDepartmentValidationSchema = z.object({
     name: z.string({
       invalid_type_error: 'Department must be string',
     }),
-    position: z.array(PositionValidationSchema).optional(),
+    positions: z.array(PositionValidationSchema).optional(),
     isDeleted: z.boolean().optional(),
   }),
 });
@@ -21,7 +21,7 @@ const updateDepartmentValidationSchema = z.object({
         invalid_type_error: 'Department must be string',
       })
       .optional(),
-    position: z.array(PositionValidationSchema).optional(),
+    positions: z.array(PositionValidationSchema).optional(),
     isDeleted: z.boolean().optional(),
   }),
 });

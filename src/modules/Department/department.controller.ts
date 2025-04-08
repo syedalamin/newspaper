@@ -3,7 +3,6 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { DepartmentServices } from './department.service';
 
-
 const createDepartment = catchAsync(async (req, res) => {
   const result = await DepartmentServices.createDepartment(req.body);
 
@@ -15,18 +14,18 @@ const createDepartment = catchAsync(async (req, res) => {
   });
 });
 const getAllDepartment = catchAsync(async (req, res) => {
-
-  const result = await DepartmentServices.getAllDepartment();
+  const result = await DepartmentServices.getAllDepartment(req.query);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: '',
+    message: 'Department is retrieved successfully',
     data: result,
   });
 });
 const getSingleDepartment = catchAsync(async (req, res) => {
-  const result = await DepartmentServices.getSingleDepartment();
+  const { id } = req.params;
+  const result = await DepartmentServices.getSingleDepartment(id);
 
   sendResponse(res, {
     statusCode: status.OK,

@@ -24,7 +24,7 @@ const departmentSchema = new Schema<TDepartment>(
       required: true,
       unique: true,
     },
-    position: [positionSchema],
+    positions: [positionSchema],
     isDeleted: {
       type: Boolean,
       default: false,

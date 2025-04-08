@@ -1,24 +1,35 @@
-import status from 'http-status';
-import AppError from '../../errors/AppError';
-import { Position } from '../Position/position.model';
 import { TDepartment } from './department.interface';
 import { Department } from './department.model';
 
+import QueryBuilder from '../../builder/QueryBuilder';
+import { departmentSearchableFields } from './department.constant';
+
 const createDepartment = async (payload: TDepartment) => {
-
-  const positionExists = await Position.findById(payload.position)
-
-  if(!positionExists){
-    throw new AppError(status.NOT_FOUND,'Position is not exists')
-  }
-
   const result = await Department.create(payload);
+
   return result;
 };
 
-const getAllDepartment = async () => {};
+const getAllDepartment = async (query: Record<string, unknown>) => {
+  const departmentQuery = new QueryBuilder(Department.find(), query)
+    .search(departmentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-const getSingleDepartment = async () => {};
+  const meta = await departmentQuery.countTotal();
+  const result = await departmentQuery.modelQuery;
+  return {
+    meta,
+    result,
+  };
+};
+const getSingleDepartment = async (id: string) => {
+  const result = await Department.findById(id);
+
+  return result;
+};
 
 const updateDepartment = async () => {};
 
