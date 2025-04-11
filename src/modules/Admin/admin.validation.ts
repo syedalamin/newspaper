@@ -63,6 +63,8 @@ const createAdminValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       experience: z.string(),
+      department: z.string(),
+      seasonalDate: z.string(),
       isFreelancer: z.boolean().optional(),
     }),
   }),
@@ -141,5 +143,5 @@ const updateAdminValidationSchema = z.object({
 
 export const AdminValidations = {
   createAdminValidationSchema,
-  updateAdminValidationSchema
+  updateAdminValidationSchema,
 };

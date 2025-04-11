@@ -119,6 +119,16 @@ const adminSchema = new Schema<TAdmin>(
       type: String,
       required: [true, 'Experiences is required'],
     },
+    department: {
+      type: Schema.Types.ObjectId,
+      ref: 'Department',
+      required: true,
+    },
+    seasonalDate: {
+      type: Schema.Types.ObjectId,
+      ref: 'Shift',
+      required: true,
+    },
     isFreelancer: {
       type: Boolean,
       default: false,

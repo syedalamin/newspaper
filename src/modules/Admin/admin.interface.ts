@@ -40,5 +40,7 @@ export type TAdmin = {
   profileImage: string;
   experience: string;
   isFreelancer: boolean;
+  department: Types.ObjectId;
+  seasonalDate: Types.ObjectId;
   isDeleted: boolean;
 };
