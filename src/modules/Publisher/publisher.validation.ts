@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { BloodGroup, Gender } from './admin.constant';
+import { BloodGroup, Gender } from './publisher.constant';
 
-const adminValidationSchema = z.object({
+const nameValidationSchema = z.object({
   firstName: z
     .string()
     .min(1)
@@ -47,11 +47,11 @@ const guardianSchema = z.object({
   motherContactNo: z.string(),
 });
 
-const createAdminValidationSchema = z.object({
+const createPublisherValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20).optional(),
-    admin: z.object({
-      name: adminValidationSchema,
+    publisher: z.object({
+      name: nameValidationSchema,
       bio: z.string().optional(),
       gender: z.enum([...Gender] as [string, ...string[]]),
       dateOfBirth: z.string().optional(),
@@ -70,7 +70,7 @@ const createAdminValidationSchema = z.object({
   }),
 });
 
-const updateAdminNameValidationSchema = z.object({
+const updateNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(1)
@@ -120,11 +120,11 @@ const updateGuardianSchema = z.object({
   motherContactNo: z.string().optional(),
 });
 
-const updateAdminValidationSchema = z.object({
+const updatePublisherValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20).optional(),
-    admin: z.object({
-      name: updateAdminNameValidationSchema.optional(),
+    publisher: z.object({
+      name: updateNameValidationSchema.optional(),
       bio: z.string().optional(),
       gender: z.enum([...Gender] as [string, ...string[]]).optional(),
       dateOfBirth: z.string().optional().optional(),
@@ -141,7 +141,7 @@ const updateAdminValidationSchema = z.object({
   }),
 });
 
-export const AdminValidations = {
-  createAdminValidationSchema,
-  updateAdminValidationSchema,
+export const PublisherValidations = {
+  createPublisherValidationSchema,
+  updatePublisherValidationSchema,
 };
