@@ -7,6 +7,9 @@ import status from 'http-status';
 import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { Department } from '../Department/department.model';
+import { Shift } from '../Seasonal_Data/seasonal.date.model';
+import { generateUserId } from '../Admin/admin.utils';
 
 const createAdminIntoDB = async (
   file: any,
@@ -22,12 +25,28 @@ const createAdminIntoDB = async (
   userData.role = 'admin';
   userData.email = payload.email;
 
+  // department exists
+  const departmentExists = await Department.findById(payload.department);
+
+  if (!departmentExists) {
+    throw new AppError(status.NOT_FOUND, 'Department is not found');
+  }
+
+  // shift data
+  const seasonalDataExists = await Shift.findById(payload.seasonalDate);
+
+  if (!seasonalDataExists) {
+    throw new AppError(status.NOT_FOUND, 'seasonal data is not found');
+  }
+
   //   session start
   const session = await mongoose.startSession();
   try {
     session.startTransaction(); // session
 
-    userData.id = 'admin123';
+    // id generated
+
+    userData.id = await generateUserId(seasonalDataExists);
 
     if (file) {
       const imageName = `${payload?.name?.firstName}`;
