@@ -1,8 +1,12 @@
+import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { PublisherSearchableFields } from './publisher.constant';
 import { TPublisher } from './publisher.interface';
 import { Publisher } from './publisher.model';
+import AppError from '../../errors/AppError';
+import status from 'http-status';
+import { UserModel } from '../User/user.model';
 
 const getPublisher = async (query: Record<string, unknown>) => {
   const publisherQuery = new QueryBuilder(Publisher.find(), query)
@@ -71,8 +75,49 @@ const updatePublisher = async (
   return result;
 };
 
+const deletePublisher = async (id: string) => {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const deletedPublisherData = await Publisher.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: true,
+      },
+      { new: true, session },
+    );
+
+    if (!deletedPublisherData) {
+      throw new AppError(
+        status.BAD_REQUEST,
+        'Failed to deleted Publisher Data',
+      );
+    }
+
+    const userId = deletedPublisherData?.user;
+    const deletedUser = await UserModel.findByIdAndUpdate(userId, {
+      isDeleted: true,
+    });
+
+    if (!deletedUser) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to deleted User Data');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return deletedPublisherData
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
+  }
+};
 export const PublisherServices = {
   getPublisher,
   getSinglePublisher,
   updatePublisher,
+  deletePublisher,
 };

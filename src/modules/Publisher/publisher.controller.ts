@@ -41,9 +41,23 @@ const updatePublisher = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deletePublisher = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await PublisherServices.deletePublisher(
+    id
+  );
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Publisher is deleted successfully',
+    data: result,
+  });
+});
 
 export const PublisherControllers = {
   getPublisher,
   getSinglePublisher,
   updatePublisher,
+  deletePublisher
 };

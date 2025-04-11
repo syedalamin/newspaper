@@ -16,5 +16,6 @@ router.patch(
   validateRequest(PublisherValidations.updatePublisherValidationSchema),
   PublisherControllers.updatePublisher,
 );
+router.delete('/:id', PublisherControllers.deletePublisher);
 
 export const PublisherRoutes = router;
