@@ -52,10 +52,14 @@ const updateAdminIntoDB = async (
   }
 
   if (file) {
-    const imageName = 'unknownUpdate';
+    const adminId = await Admin.findById(id).select('id -_id').lean();
+    const imageName = adminId?.id;
     const path = file.path;
 
-    const { secure_url } = await sendImageToCloudinary(imageName, path);
+    const { secure_url } = await sendImageToCloudinary(
+      imageName as string,
+      path,
+    );
 
     modifiedUpdatedData.profileImage = secure_url as string;
   }

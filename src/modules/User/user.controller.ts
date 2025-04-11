@@ -18,12 +18,13 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const createPublisher = catchAsync(async(req, res)=>{
-  const {password, publisher: publisherData} = req.body
-  const result = await UserServices.createPublisherIntoDB(req.file, password, publisherData)
-
-  
-
+const createPublisher = catchAsync(async (req, res) => {
+  const { password, publisher: publisherData } = req.body;
+  const result = await UserServices.createPublisherIntoDB(
+    req.file,
+    password,
+    publisherData,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -31,10 +32,9 @@ const createPublisher = catchAsync(async(req, res)=>{
     message: 'Publisher is created successfully',
     data: result,
   });
-
-})
+});
 
 export const UserControllers = {
   createAdmin,
-  createPublisher
+  createPublisher,
 };
