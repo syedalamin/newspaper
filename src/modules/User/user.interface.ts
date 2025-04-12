@@ -1,3 +1,4 @@
+import { Model } from 'mongoose';
 
 export type TRole =
   | 'superAdmin'
@@ -10,9 +11,9 @@ export type TRole =
   | 'marketer'
   | 'hr'
   | 'finance'
-  | 'publisher'
+  | 'publisher';
 
-  export type TUserStatus = 'active' | 'suspended' | 'in-progress';
+export type TUserStatus = 'active' | 'suspended' | 'in-progress';
 
 export interface TUser {
   id: string;
@@ -20,6 +21,16 @@ export interface TUser {
   password?: string;
   needsPasswordChanged: boolean;
   role: TRole;
-  status: TUserStatus ;
+  status: TUserStatus;
   isDeleted: boolean;
+}
+
+export interface IUserModel extends Model<TUser> {
+  isUserExistsByCustomId (id: string) : Promise<TUser>;
+
+
+  isPasswordMatched (
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) : Promise<boolean>;
 }

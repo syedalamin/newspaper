@@ -5,6 +5,7 @@ import { PositionRoutes } from '../modules/Position/position.route';
 import { DepartmentRoutes } from '../modules/Department/department.route';
 import { ShiftRoutes } from '../modules/Seasonal_Data/seasonal.date.route';
 import { PublisherRoutes } from '../modules/Publisher/publisher.route';
+import { AuthRoutes } from '../modules/Auth/auth.route';
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: '/publishers',
     route: PublisherRoutes,
+  },
+  {
+    path: '/auth',
+    route: AuthRoutes,
   },
 ];
 

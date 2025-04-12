@@ -1,10 +1,10 @@
 import { model, Schema } from 'mongoose';
-import { TUser } from './user.interface';
+import { IUserModel, TUser } from './user.interface';
 import { Role, UserStatus } from './user.constant';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, IUserModel>(
   {
     id: {
       type: String,
@@ -16,6 +16,8 @@ const userSchema = new Schema<TUser>(
     },
     password: {
       type: String,
+      required: true,
+      select: 0,
     },
     needsPasswordChanged: {
       type: Boolean,
@@ -46,13 +48,23 @@ userSchema.pre('save', async function (next) {
     user.password as string,
     Number(config.bcrypt_salt_rounds),
   );
-  next()
+  next();
 });
 
-// set after saving password 
-userSchema.post('save', function(doc, next){
-  doc.password = ''
-  next()
-})
+// set after saving password
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
 
-export const UserModel = model<TUser>('User', userSchema);
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await UserModel.findOne({ id }).select('+password');
+};
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword: string,
+  hashedPassword: string,
+) {
+  return bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const UserModel = model<TUser, IUserModel>('User', userSchema);
