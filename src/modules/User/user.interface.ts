@@ -26,11 +26,15 @@ export interface TUser {
 }
 
 export interface IUserModel extends Model<TUser> {
-  isUserExistsByCustomId (id: string) : Promise<TUser>;
+  isUserExistsByCustomId(id: string): Promise<TUser>;
 
-
-  isPasswordMatched (
+  isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,
-  ) : Promise<boolean>;
+  ): Promise<boolean>;
+
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number,
+  ): boolean;
 }

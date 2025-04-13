@@ -5,6 +5,7 @@ import { AdminValidations } from '../Admin/admin.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
 import jsonDataParse from '../../middlewares/jsonDataParse';
 import { PublisherValidations } from '../Publisher/publisher.validation';
+import auth from '../../middlewares/auth';
 const router = Router();
 
 router.post(
@@ -19,6 +20,8 @@ router.post(
   upload.single('file'),
   jsonDataParse,
   validateRequest(PublisherValidations.createPublisherValidationSchema),
+  auth('admin'),
+
   UserControllers.createPublisher,
 );
 
