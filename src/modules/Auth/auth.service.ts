@@ -2,7 +2,7 @@ import status from 'http-status';
 import AppError from '../../errors/AppError';
 import { UserModel } from '../User/user.model';
 import { TLoginUser } from './auth.interface';
-import { createToken } from './auth.utils';
+import { createToken, verifyToken } from './auth.utils';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 import { JwtPayload, SignOptions } from 'jsonwebtoken';
@@ -104,12 +104,62 @@ const changePassword = async (
       needsPasswordChanged: true,
       passwordChangedAt: new Date(),
     },
-
   );
 
   return null;
 };
+
+const refreshToken = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
+
+  const { userId, iat } = decoded;
+
+  // checking if the user is exist
+  const user = await UserModel.isUserExistsByCustomId(userId);
+
+  if (!user) {
+    throw new AppError(status.NOT_FOUND, 'This user is not found !');
+  }
+
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(status.FORBIDDEN, 'This user is deleted !');
+  }
+
+  const userStatus = user?.status;
+
+  if (userStatus === 'suspended') {
+    throw new AppError(status.FORBIDDEN, 'This user is blocked ! !');
+  }
+
+  if (
+    user.passwordChangedAt &&
+    UserModel.isJWTIssuedBeforePasswordChanged(
+      user.passwordChangedAt,
+      iat as number,
+    )
+  ) {
+    throw new AppError(status.UNAUTHORIZED, 'You are not authorized !');
+  }
+
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as SignOptions['expiresIn'],
+  );
+
+  return {
+    accessToken,
+  };
+};
 export const AuthServices = {
   loginUserIntoDB,
   changePassword,
+  refreshToken,
 };

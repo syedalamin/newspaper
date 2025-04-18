@@ -20,6 +20,7 @@ export interface TUser {
   email: string;
   password?: string;
   needsPasswordChanged: boolean;
+  passwordChangedAt?: Date;
   role: TRole;
   status: TUserStatus;
   isDeleted: boolean;
