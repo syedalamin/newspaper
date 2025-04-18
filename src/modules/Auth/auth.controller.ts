@@ -2,6 +2,7 @@ import status from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
+import AppError from '../../errors/AppError';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUserIntoDB(req.body);
@@ -52,6 +53,21 @@ const forgetPassword = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
+    message: 'forget Password ',
+    data: result,
+  });
+});
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    throw new AppError(status.BAD_REQUEST, 'Something went wrong !');
+  }
+
+  const result = await  AuthServices.resetPassword(req.body, token);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
     message: 'reset Password ',
     data: result,
   });
@@ -61,5 +77,6 @@ export const AuthControllers = {
   loginUser,
   changePassword,
   refreshToken,
-  forgetPassword
+  forgetPassword,
+  resetPassword
 };
