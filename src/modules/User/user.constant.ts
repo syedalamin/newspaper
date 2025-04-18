@@ -14,4 +14,18 @@ export const Role: TRole[] = [
   'publisher',
 ];
 
+export const User_Role = {
+  superAdmin: 'superAdmin',
+  admin:'admin',
+  editor :'editor',
+  reporter :'reporter',
+  photography:'photography',
+  design :'design',
+  it:'it',
+  marketer :'marketer',
+  hr :'hr',
+  finance:'finance',
+  publisher :'publisher',
+};
+
 export const UserStatus: TUserStatus[] = ['active', 'in-progress', 'suspended'];

@@ -6,6 +6,8 @@ import { DepartmentRoutes } from '../modules/Department/department.route';
 import { ShiftRoutes } from '../modules/Seasonal_Data/seasonal.date.route';
 import { PublisherRoutes } from '../modules/Publisher/publisher.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
+import { CategoryRoutes } from '../modules/Category/category.route';
+import { TagsRoutes } from '../modules/Tags/tags.route';
 
 const router = Router();
 
@@ -37,6 +39,14 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/categories',
+    route: CategoryRoutes,
+  },
+  {
+    path: '/tags',
+    route: TagsRoutes,
   },
 ];
 
