@@ -8,6 +8,7 @@ import { PublisherRoutes } from '../modules/Publisher/publisher.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { CategoryRoutes } from '../modules/Category/category.route';
 import { TagsRoutes } from '../modules/Tags/tags.route';
+import { NewsArticleRoutes } from '../modules/NewsArticle/news.article.route';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/tags',
     route: TagsRoutes,
+  },
+  {
+    path: '/news',
+    route: NewsArticleRoutes,
   },
 ];
 
