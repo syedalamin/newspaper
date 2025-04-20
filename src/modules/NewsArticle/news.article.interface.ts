@@ -19,4 +19,3 @@ export type TNewsArticle = {
   isPublished: TPublishedStatus;
   tags?: [TNewsTags];
 };
-

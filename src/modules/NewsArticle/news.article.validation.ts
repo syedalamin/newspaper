@@ -8,9 +8,6 @@ const tagsValidationSchema = z.object({
 
 const createNewsArticleValidationSchema = z.object({
   body: z.object({
-    journalist: z.string({
-      invalid_type_error: 'journalist must be string',
-    }),
     category: z.string({
       invalid_type_error: 'category must be string',
     }),
@@ -36,7 +33,6 @@ const createNewsArticleValidationSchema = z.object({
 });
 const updateNewsArticleValidationSchema = z.object({
   body: z.object({
-    journalist: z.string().optional(),
     category: z.string().optional(),
     title: z.string().optional(),
     content: z.string().optional(),

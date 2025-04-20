@@ -26,6 +26,6 @@ export const User_Role = {
   hr :'hr',
   finance:'finance',
   publisher :'publisher',
-};
+} as const;
 
 export const UserStatus: TUserStatus[] = ['active', 'in-progress', 'suspended'];

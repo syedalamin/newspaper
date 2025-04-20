@@ -4,7 +4,8 @@ import sendResponse from '../../utils/sendResponse';
 import { NewsArticleServices } from './news.article.service';
 
 const createNewsArticle = catchAsync(async (req, res) => {
-  const result = await NewsArticleServices.createNewsArticle(req.body);
+  const userId = req.user.userId;
+  const result = await NewsArticleServices.createNewsArticle(userId, req.body);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -14,7 +15,7 @@ const createNewsArticle = catchAsync(async (req, res) => {
   });
 });
 const getAllNewsArticle = catchAsync(async (req, res) => {
-  const result = await NewsArticleServices.getAllNewsArticle();
+  const result = await NewsArticleServices.getAllNewsArticle(req.query);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -23,6 +24,19 @@ const getAllNewsArticle = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getMyAllNewsArticle = catchAsync(async (req, res) => {
+  const userId = req.user.userId
+  const result = await NewsArticleServices.getMyAllNewsArticle(userId,req.query);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'My NewsArticle are retrieved successfully',
+    data: result,
+  });
+});
+
 const getSingleNewsArticle = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await NewsArticleServices.getSingleNewsArticle(id);
@@ -51,4 +65,5 @@ export const NewsArticleControllers = {
   getAllNewsArticle,
   getSingleNewsArticle,
   updateNewsArticle,
+  getMyAllNewsArticle
 };
